@@ -46,7 +46,8 @@ final class CheckoutViewController: UIViewController {
         super.viewDidLoad()
         self.hideKeyboardWhenTappedAround()
         
-        textFieldCardNumber.delegate = self;
+        textFieldCardNumber.delegate = self
+        textFieldExpDate.delegate = self
         
         self.loadingIndicator.isHidden = true
         title = payType.description
@@ -146,11 +147,42 @@ extension CheckoutViewController: UIWebViewDelegate {
 
 extension CheckoutViewController: UITextFieldDelegate {
     
-    // Пример определения типа платежной системы по номеру карты:
-    // Определяем тип во время ввода номера карты и выводим данные в лог
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        print(Card.cardType(toString: Card.cardType(fromCardNumber: textField.text)))
-        return true
+        switch textField {
+            // Пример определения типа платежной системы по номеру карты:
+        // Определяем тип во время ввода номера карты и выводим данные в лог
+        case textFieldCardNumber:
+            print(Card.cardType(toString: Card.cardType(fromCardNumber: textField.text)))
+            return true
+        case textFieldExpDate:
+            // original answer https://stackoverflow.com/a/47077265
+            if range.length > 0 {
+                return true
+            }
+            if string == "" {
+                return false
+            }
+            if range.location > 4 {
+                return false
+            }
+            var originalText = textField.text
+            let replacementText = string.replacingOccurrences(of: " ", with: "")
+            
+            // Verify entered text is a numeric value
+            if !CharacterSet.decimalDigits.isSuperset(of: CharacterSet(charactersIn: replacementText)) {
+                return false
+            }
+            
+            // Put / after 2 digit
+            if range.location == 2 {
+                originalText?.append("/")
+                textField.text = originalText
+            }
+            return true
+            
+        default:
+            return true
+        }
     }
     
 }
