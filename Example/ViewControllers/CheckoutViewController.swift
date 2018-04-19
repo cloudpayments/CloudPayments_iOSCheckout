@@ -3,14 +3,27 @@ import Alamofire
 import AFNetworking
 import SVProgressHUD
 
-class CheckoutViewController: UIViewController, UIWebViewDelegate, UITextFieldDelegate {
+enum PayType {
+    case charge
+    case auth
     
-    static let PAY_TYPE_CHARGE = 31
-    static let PAY_TYPE_AUTH = 32
+    var description: String {
+        switch self {
+        case .charge:
+            return "Одностадийная оплата"
+        case .auth:
+            return "Двухстадийная оплата"
+        }
+    }
+}
+
+final class CheckoutViewController: UIViewController, UIWebViewDelegate, UITextFieldDelegate {
     
-    var payType = 0
+    private var payType: PayType!
     
     private let network = NetworkService()
+    
+    // MARK: - Outlets
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
@@ -19,10 +32,15 @@ class CheckoutViewController: UIViewController, UIWebViewDelegate, UITextFieldDe
     @IBOutlet weak var textFieldHolderName: UITextField!
     @IBOutlet weak var textFieldCVV: UITextField!
     
-    static func storyboardInstance() -> CheckoutViewController? {
+    /// Instantiate `CheckoutViewController` from storyboard
+    static func storyboardInstance(payType: PayType) -> CheckoutViewController {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        return storyboard.instantiateViewController(withIdentifier: String(describing: self)) as? CheckoutViewController
+        let vc = storyboard.instantiateViewController(withIdentifier: String(describing: self)) as! CheckoutViewController
+        vc.payType = payType
+        return vc
     }
+    
+    // MARK: - View life cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,31 +49,30 @@ class CheckoutViewController: UIViewController, UIWebViewDelegate, UITextFieldDe
         textFieldCardNumber.delegate = self;
         
         self.loadingIndicator.isHidden = true
+        title = payType.description
         
-        if (payType == CheckoutViewController.PAY_TYPE_CHARGE) {
-            self.title = "Одностадийная оплата"
-        } else {
-            self.title = "Двухстадийная оплата"
-        }
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
     
-    @objc func keyboardWillShow(notification:NSNotification){
-        //give room at the bottom of the scroll view, so it doesn't cover up anything the user needs to tap
+    // MARK: - Notifications callbacks
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
         var userInfo = notification.userInfo!
-        var keyboardFrame:CGRect = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        var keyboardFrame = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
         keyboardFrame = self.view.convert(keyboardFrame, from: nil)
         
-        var contentInset:UIEdgeInsets = self.scrollView.contentInset
+        var contentInset = self.scrollView.contentInset
         contentInset.bottom = keyboardFrame.size.height
         scrollView.contentInset = contentInset
     }
     
-    @objc func keyboardWillHide(notification:NSNotification){
-        let contentInset:UIEdgeInsets = UIEdgeInsets.zero
+    @objc func keyboardWillHide(notification: NSNotification) {
+        let contentInset = UIEdgeInsets.zero
         scrollView.contentInset = contentInset
     }
     
@@ -93,13 +110,16 @@ class CheckoutViewController: UIViewController, UIWebViewDelegate, UITextFieldDe
         // Создаем криптограмму карточных данных
         // Чтобы создать криптограмму необходим PublicID (свой PublicID можно посмотреть в личном кабинете и затем заменить в файле Constants)
         let cardCryptogramPacket = card.makeCryptogramPacket(cardNumber, andExpDate: expDate, andCVV: cvv, andMerchantPublicID: Constants.merchantPulicId)
-
+        
         // Используя методы API выполняем оплату по криптограмме
         // (charge (для одностадийного платежа) или auth (для двухстадийного))
-        if (payType == CheckoutViewController.PAY_TYPE_CHARGE) {
+        switch payType {
+        case .charge:
             charge(cardCryptogramPacket: cardCryptogramPacket!, cardHolderName: holderName)
-        } else {
+        case .auth:
             auth(cardCryptogramPacket: cardCryptogramPacket!, cardHolderName: holderName)
+        default:
+            return
         }
     }
     
@@ -196,12 +216,12 @@ private extension CheckoutViewController {
                 return
             }
             if (transactionResponse.transaction?.paReq != nil && transactionResponse.transaction?.acsUrl != nil) {
-               
+                
                 let transactionId = String(describing: transactionResponse.transaction?.transactionId ?? 0)
                 
                 // Показываем 3DS форму
                 D3DS.make3DSPayment(with: self, andAcsURLString: transactionResponse.transaction?.acsUrl, andPaReqString: transactionResponse.transaction?.paReq, andTransactionIdString: transactionId)
-                            } else {
+            } else {
                 self.showAlert(title: "Информация", message: transactionResponse.transaction?.cardHolderMessage)
             }
         }
