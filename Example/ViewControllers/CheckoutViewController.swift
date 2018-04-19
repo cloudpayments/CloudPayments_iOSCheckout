@@ -17,7 +17,7 @@ enum PayType {
     }
 }
 
-final class CheckoutViewController: UIViewController, UIWebViewDelegate, UITextFieldDelegate {
+final class CheckoutViewController: UIViewController {
     
     private var payType: PayType!
     
@@ -123,10 +123,14 @@ final class CheckoutViewController: UIViewController, UIWebViewDelegate, UITextF
         }
     }
     
-    // Обрабатываем результат работы 3DS формы
+}
+
+extension CheckoutViewController: UIWebViewDelegate {
+    
+    /// Handle result from 3DS form
     func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
         let urlString = request.url?.absoluteString
-        if (urlString == "http://cloudpayments.ru/") {
+        if (urlString == Constants.cloudpaymentsURL) {
             var response: String? = nil
             if let aBody = request.httpBody {
                 response = String(data: aBody, encoding: .ascii)
@@ -138,6 +142,9 @@ final class CheckoutViewController: UIViewController, UIWebViewDelegate, UITextF
         }
         return true
     }
+}
+
+extension CheckoutViewController: UITextFieldDelegate {
     
     // Пример определения типа платежной системы по номеру карты:
     // Определяем тип во время ввода номера карты и выводим данные в лог
