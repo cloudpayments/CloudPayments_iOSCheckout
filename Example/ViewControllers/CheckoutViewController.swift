@@ -10,9 +10,9 @@ enum PayType {
     var description: String {
         switch self {
         case .charge:
-            return "Одностадийная оплата"
+            return .oneStagePayment
         case .auth:
-            return "Двухстадийная оплата"
+            return .twoStagePayment
         }
     }
 }
@@ -80,27 +80,27 @@ final class CheckoutViewController: UIViewController, UIWebViewDelegate, UITextF
         
         // Получаем введенные данные банковской карты
         guard let cardNumber = textFieldCardNumber.text, !cardNumber.isEmpty else {
-            self.showAlert(title: "Ошибка", message: "Введите номер карты")
+            self.showAlert(title: .errorWord, message: .enterCardNumber)
             return
         }
         
         if !Card.isCardNumberValid(cardNumber) {
-            self.showAlert(title: "Ошибка", message: "Введите корректный номер карты")
+            self.showAlert(title: .errorWord, message: .enterCorrectCardNumber)
             return
         }
         
         guard let expDate = textFieldExpDate.text, expDate.count == 5 else {
-            self.showAlert(title: "Ошибка", message: "Введите дату окончания действия карты в формате MM/YY")
+            self.showAlert(title: .errorWord, message: .enterExpirationDate)
             return
         }
         
         guard let holderName = textFieldHolderName.text, !holderName.isEmpty else {
-            self.showAlert(title: "Ошибка", message: "Введите имя владельца карты")
+            self.showAlert(title: .errorWord, message: .enterCardHolder)
             return
         }
         
         guard let cvv = textFieldCVV.text, !cvv.isEmpty else {
-            self.showAlert(title: "Ошибка", message: "Введите cvv код")
+            self.showAlert(title: .errorWord, message: .enterCVVCode)
             return
         }
         
@@ -172,7 +172,7 @@ private extension CheckoutViewController {
                 self?.checkTransactionResponse(transactionResponse: transactionResponse)
             case .failure(let error):
                 print("error")
-                self?.showAlert(title: "Ошибка", message: error.localizedDescription)
+                self?.showAlert(title: .errorWord, message: error.localizedDescription)
             }
         }
     }
@@ -198,7 +198,7 @@ private extension CheckoutViewController {
                 self?.checkTransactionResponse(transactionResponse: transactionResponse)
             case .failure(let error):
                 print("error")
-                self?.showAlert(title: "Ошибка", message: error.localizedDescription)
+                self?.showAlert(title: .errorWord, message: error.localizedDescription)
             }
         }
     }
@@ -208,11 +208,11 @@ private extension CheckoutViewController {
         if (transactionResponse.success) {
             
             // Показываем результат
-            self.showAlert(title: "Информация", message: transactionResponse.transaction?.cardHolderMessage)
+            self.showAlert(title: .informationWord, message: transactionResponse.transaction?.cardHolderMessage)
         } else {
             
             if (!transactionResponse.message.isEmpty) {
-                self.showAlert(title: "Ошибка", message: transactionResponse.message)
+                self.showAlert(title: .errorWord, message: transactionResponse.message)
                 return
             }
             if (transactionResponse.transaction?.paReq != nil && transactionResponse.transaction?.acsUrl != nil) {
@@ -222,7 +222,7 @@ private extension CheckoutViewController {
                 // Показываем 3DS форму
                 D3DS.make3DSPayment(with: self, andAcsURLString: transactionResponse.transaction?.acsUrl, andPaReqString: transactionResponse.transaction?.paReq, andTransactionIdString: transactionId)
             } else {
-                self.showAlert(title: "Информация", message: transactionResponse.transaction?.cardHolderMessage)
+                self.showAlert(title: .informationWord, message: transactionResponse.transaction?.cardHolderMessage)
             }
         }
     }
@@ -241,7 +241,7 @@ private extension CheckoutViewController {
                 self?.checkTransactionResponse(transactionResponse: transactionResponse)
             case .failure(let error):
                 print("error")
-                self?.showAlert(title: "Ошибка", message: error.localizedDescription)
+                self?.showAlert(title: .errorWord, message: error.localizedDescription)
             }
         }
     }

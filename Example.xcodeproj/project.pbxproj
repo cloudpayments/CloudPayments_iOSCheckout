@@ -24,6 +24,7 @@
 		13FF62B12074C8C400A1C95E /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13FF62B02074C8C400A1C95E /* BaseViewController.swift */; };
 		13FF62B42074D74E00A1C95E /* TransactionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13FF62B32074D74E00A1C95E /* TransactionResponse.swift */; };
 		16CD8CD0BD1A52A6E02B35AB /* Pods_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06C321ACF3F101756C2E75C2 /* Pods_Example.framework */; };
+		F4F0ADB12088E7CD00E9D763 /* String+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F0ADB02088E7CD00E9D763 /* String+Localization.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +53,7 @@
 		13FF62B32074D74E00A1C95E /* TransactionResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionResponse.swift; sourceTree = "<group>"; };
 		58301FE6BE2253FC0F78D4D6 /* Pods-Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Example/Pods-Example.debug.xcconfig"; sourceTree = "<group>"; };
 		DA6651AC4817C3284D2014FD /* Pods-Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-Example/Pods-Example.release.xcconfig"; sourceTree = "<group>"; };
+		F4F0ADB02088E7CD00E9D763 /* String+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Localization.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -181,6 +183,7 @@
 			isa = PBXGroup;
 			children = (
 				13F430DE2073999300A8F0DA /* Constants.swift */,
+				F4F0ADB02088E7CD00E9D763 /* String+Localization.swift */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -353,6 +356,7 @@
 				13FF62B42074D74E00A1C95E /* TransactionResponse.swift in Sources */,
 				13F430D920737C0B00A8F0DA /* Card.m in Sources */,
 				138311AE2074C4F300230914 /* HTTP.swift in Sources */,
+				F4F0ADB12088E7CD00E9D763 /* String+Localization.swift in Sources */,
 				13FF62B12074C8C400A1C95E /* BaseViewController.swift in Sources */,
 				138311AA2074AB4300230914 /* Transaction.swift in Sources */,
 				138311B22074C5E200230914 /* Api.swift in Sources */,
