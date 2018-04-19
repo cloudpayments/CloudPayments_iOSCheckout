@@ -9,4 +9,5 @@ extension String {
     static let enterCardHolder = "Введите имя владельца карты"
     static let enterCVVCode = "Введите CVV код"
     static let informationWord = "Информация"
+    static let errorCreatingCryptoPacket = "Ошибка при создании крипто-пакета"
 }

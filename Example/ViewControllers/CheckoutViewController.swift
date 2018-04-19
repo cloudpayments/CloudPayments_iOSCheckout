@@ -112,13 +112,18 @@ final class CheckoutViewController: UIViewController {
         // Чтобы создать криптограмму необходим PublicID (свой PublicID можно посмотреть в личном кабинете и затем заменить в файле Constants)
         let cardCryptogramPacket = card.makeCryptogramPacket(cardNumber, andExpDate: expDate, andCVV: cvv, andMerchantPublicID: Constants.merchantPulicId)
         
+        guard let packet = cardCryptogramPacket else {
+            self.showAlert(title: .errorWord, message: .errorCreatingCryptoPacket)
+            return
+        }
+        
         // Используя методы API выполняем оплату по криптограмме
         // (charge (для одностадийного платежа) или auth (для двухстадийного))
         switch payType {
         case .charge:
-            charge(cardCryptogramPacket: cardCryptogramPacket!, cardHolderName: holderName)
+            charge(cardCryptogramPacket: packet, cardHolderName: holderName)
         case .auth:
-            auth(cardCryptogramPacket: cardCryptogramPacket!, cardHolderName: holderName)
+            auth(cardCryptogramPacket: packet, cardHolderName: holderName)
         default:
             return
         }
@@ -136,7 +141,7 @@ extension CheckoutViewController: UIWebViewDelegate {
             if let aBody = request.httpBody {
                 response = String(data: aBody, encoding: .ascii)
             }
-            let responseDictionary = parseQueryString(response)
+            let responseDictionary = parse(response: response)
             webView.removeFromSuperview()
             post3ds(transactionId: responseDictionary?["MD"] as! String, paRes: responseDictionary?["PaRes"] as! String)
             return false
@@ -296,15 +301,18 @@ private extension CheckoutViewController {
     }
     
     // MARK: - Utilities
-    func parseQueryString(_ query: String?) -> [AnyHashable: Any]? {
-        var dict = [AnyHashable: Any](minimumCapacity: 6)
-        let pairs = query?.components(separatedBy: "&")
-        for pair: String? in pairs ?? [String?]() {
-            let elements = pair?.components(separatedBy: "=")
-            let key = elements?[0].removingPercentEncoding
-            let val = elements?[1].removingPercentEncoding
-            dict[key!] = val
+    
+    func parse(response: String?) -> [AnyHashable: Any]? {
+        guard let response = response else {
+            return nil
         }
+        
+        let pairs = response.components(separatedBy: "&")
+        let elements = pairs.map { $0.components(separatedBy: "=") }
+        let dict = elements.reduce(into: [String: String]()) {
+            $0[$1[0].removingPercentEncoding!] = $1[1].removingPercentEncoding
+        }
+        
         return dict
     }
 }
