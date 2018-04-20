@@ -6,6 +6,7 @@
 
 ## Инсталяция
 git clone https://github.com/cloudpayments/CloudPayments_iOSCheckout.git
+pod install (в папке проекта)
 
 ## Описание работы приложения с SDK CloudPayments
 
