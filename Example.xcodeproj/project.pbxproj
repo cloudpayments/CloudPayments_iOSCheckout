@@ -21,9 +21,10 @@
 		13F430D920737C0B00A8F0DA /* Card.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F430D820737C0B00A8F0DA /* Card.m */; };
 		13F430DC20737CA000A8F0DA /* NSDataENBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F430DB20737CA000A8F0DA /* NSDataENBase64.m */; };
 		13F430DF2073999300A8F0DA /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13F430DE2073999300A8F0DA /* Constants.swift */; };
-		13FF62B12074C8C400A1C95E /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13FF62B02074C8C400A1C95E /* BaseViewController.swift */; };
+		13FF62B12074C8C400A1C95E /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13FF62B02074C8C400A1C95E /* UIViewController+Extensions.swift */; };
 		13FF62B42074D74E00A1C95E /* TransactionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13FF62B32074D74E00A1C95E /* TransactionResponse.swift */; };
 		16CD8CD0BD1A52A6E02B35AB /* Pods_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06C321ACF3F101756C2E75C2 /* Pods_Example.framework */; };
+		F4F0ADB12088E7CD00E9D763 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F0ADB02088E7CD00E9D763 /* String+Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,10 +49,11 @@
 		13F430DA20737C6700A8F0DA /* NSDataENBase64.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSDataENBase64.h; sourceTree = "<group>"; };
 		13F430DB20737CA000A8F0DA /* NSDataENBase64.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSDataENBase64.m; sourceTree = "<group>"; };
 		13F430DE2073999300A8F0DA /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		13FF62B02074C8C400A1C95E /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		13FF62B02074C8C400A1C95E /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		13FF62B32074D74E00A1C95E /* TransactionResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionResponse.swift; sourceTree = "<group>"; };
 		58301FE6BE2253FC0F78D4D6 /* Pods-Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Example/Pods-Example.debug.xcconfig"; sourceTree = "<group>"; };
 		DA6651AC4817C3284D2014FD /* Pods-Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-Example/Pods-Example.release.xcconfig"; sourceTree = "<group>"; };
+		F4F0ADB02088E7CD00E9D763 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,7 +130,6 @@
 			children = (
 				13E7AADB2048198300E3BF4D /* MainViewController.swift */,
 				1392BEB020592A2600762C24 /* CheckoutViewController.swift */,
-				13FF62B02074C8C400A1C95E /* BaseViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -168,6 +169,7 @@
 				13F430DD2073995D00A8F0DA /* Support */,
 				1392BEAF2059276E00762C24 /* ViewControllers */,
 				1392BEAE2059276000762C24 /* SDK */,
+				F4F0ADB22088E8C300E9D763 /* Extensions */,
 				13E7AAD92048198300E3BF4D /* AppDelegate.swift */,
 				13E7AADD2048198300E3BF4D /* Main.storyboard */,
 				13E7AAE02048198300E3BF4D /* Assets.xcassets */,
@@ -208,6 +210,15 @@
 				DA6651AC4817C3284D2014FD /* Pods-Example.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		F4F0ADB22088E8C300E9D763 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				13FF62B02074C8C400A1C95E /* UIViewController+Extensions.swift */,
+				F4F0ADB02088E7CD00E9D763 /* String+Extensions.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -353,7 +364,8 @@
 				13FF62B42074D74E00A1C95E /* TransactionResponse.swift in Sources */,
 				13F430D920737C0B00A8F0DA /* Card.m in Sources */,
 				138311AE2074C4F300230914 /* HTTP.swift in Sources */,
-				13FF62B12074C8C400A1C95E /* BaseViewController.swift in Sources */,
+				F4F0ADB12088E7CD00E9D763 /* String+Extensions.swift in Sources */,
+				13FF62B12074C8C400A1C95E /* UIViewController+Extensions.swift in Sources */,
 				138311AA2074AB4300230914 /* Transaction.swift in Sources */,
 				138311B22074C5E200230914 /* Api.swift in Sources */,
 				13A93C772080D17200918EDE /* D3DS.m in Sources */,

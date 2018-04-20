@@ -3,14 +3,27 @@ import Alamofire
 import AFNetworking
 import SVProgressHUD
 
-class CheckoutViewController: UIViewController, UIWebViewDelegate, UITextFieldDelegate {
+enum PayType {
+    case charge
+    case auth
     
-    static let PAY_TYPE_CHARGE = 31
-    static let PAY_TYPE_AUTH = 32
+    var description: String {
+        switch self {
+        case .charge:
+            return .oneStagePayment
+        case .auth:
+            return .twoStagePayment
+        }
+    }
+}
+
+final class CheckoutViewController: UIViewController {
     
-    var payType = 0
+    private var payType: PayType!
     
     private let network = NetworkService()
+    
+    // MARK: - Outlets
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
@@ -19,43 +32,48 @@ class CheckoutViewController: UIViewController, UIWebViewDelegate, UITextFieldDe
     @IBOutlet weak var textFieldHolderName: UITextField!
     @IBOutlet weak var textFieldCVV: UITextField!
     
-    static func storyboardInstance() -> CheckoutViewController? {
+    /// Instantiate `CheckoutViewController` from storyboard
+    static func storyboardInstance(payType: PayType) -> CheckoutViewController {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        return storyboard.instantiateViewController(withIdentifier: String(describing: self)) as? CheckoutViewController
+        let vc = storyboard.instantiateViewController(withIdentifier: String(describing: self)) as! CheckoutViewController
+        vc.payType = payType
+        return vc
     }
+    
+    // MARK: - View life cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.hideKeyboardWhenTappedAround()
         
-        textFieldCardNumber.delegate = self;
+        textFieldCardNumber.delegate = self
+        textFieldExpDate.delegate = self
         
         self.loadingIndicator.isHidden = true
+        title = payType.description
         
-        if (payType == CheckoutViewController.PAY_TYPE_CHARGE) {
-            self.title = "Одностадийная оплата"
-        } else {
-            self.title = "Двухстадийная оплата"
-        }
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
     
-    @objc func keyboardWillShow(notification:NSNotification){
-        //give room at the bottom of the scroll view, so it doesn't cover up anything the user needs to tap
+    // MARK: - Notifications callbacks
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
         var userInfo = notification.userInfo!
-        var keyboardFrame:CGRect = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        var keyboardFrame = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
         keyboardFrame = self.view.convert(keyboardFrame, from: nil)
         
-        var contentInset:UIEdgeInsets = self.scrollView.contentInset
+        var contentInset = self.scrollView.contentInset
         contentInset.bottom = keyboardFrame.size.height
         scrollView.contentInset = contentInset
     }
     
-    @objc func keyboardWillHide(notification:NSNotification){
-        let contentInset:UIEdgeInsets = UIEdgeInsets.zero
+    @objc func keyboardWillHide(notification: NSNotification) {
+        let contentInset = UIEdgeInsets.zero
         scrollView.contentInset = contentInset
     }
     
@@ -63,27 +81,27 @@ class CheckoutViewController: UIViewController, UIWebViewDelegate, UITextFieldDe
         
         // Получаем введенные данные банковской карты
         guard let cardNumber = textFieldCardNumber.text, !cardNumber.isEmpty else {
-            self.showAlert(title: "Ошибка", message: "Введите номер карты")
+            self.showAlert(title: .errorWord, message: .enterCardNumber)
             return
         }
         
         if !Card.isCardNumberValid(cardNumber) {
-            self.showAlert(title: "Ошибка", message: "Введите корректный номер карты")
+            self.showAlert(title: .errorWord, message: .enterCorrectCardNumber)
             return
         }
         
         guard let expDate = textFieldExpDate.text, expDate.count == 5 else {
-            self.showAlert(title: "Ошибка", message: "Введите дату окончания действия карты в формате MM/YY")
+            self.showAlert(title: .errorWord, message: .enterExpirationDate)
             return
         }
         
         guard let holderName = textFieldHolderName.text, !holderName.isEmpty else {
-            self.showAlert(title: "Ошибка", message: "Введите имя владельца карты")
+            self.showAlert(title: .errorWord, message: .enterCardHolder)
             return
         }
         
         guard let cvv = textFieldCVV.text, !cvv.isEmpty else {
-            self.showAlert(title: "Ошибка", message: "Введите cvv код")
+            self.showAlert(title: .errorWord, message: .enterCVVCode)
             return
         }
         
@@ -93,37 +111,83 @@ class CheckoutViewController: UIViewController, UIWebViewDelegate, UITextFieldDe
         // Создаем криптограмму карточных данных
         // Чтобы создать криптограмму необходим PublicID (свой PublicID можно посмотреть в личном кабинете и затем заменить в файле Constants)
         let cardCryptogramPacket = card.makeCryptogramPacket(cardNumber, andExpDate: expDate, andCVV: cvv, andMerchantPublicID: Constants.merchantPulicId)
-
+        
+        guard let packet = cardCryptogramPacket else {
+            self.showAlert(title: .errorWord, message: .errorCreatingCryptoPacket)
+            return
+        }
+        
         // Используя методы API выполняем оплату по криптограмме
         // (charge (для одностадийного платежа) или auth (для двухстадийного))
-        if (payType == CheckoutViewController.PAY_TYPE_CHARGE) {
-            charge(cardCryptogramPacket: cardCryptogramPacket!, cardHolderName: holderName)
-        } else {
-            auth(cardCryptogramPacket: cardCryptogramPacket!, cardHolderName: holderName)
+        switch payType {
+        case .charge:
+            charge(cardCryptogramPacket: packet, cardHolderName: holderName)
+        case .auth:
+            auth(cardCryptogramPacket: packet, cardHolderName: holderName)
+        default:
+            return
         }
     }
     
-    // Обрабатываем результат работы 3DS формы
+}
+
+extension CheckoutViewController: UIWebViewDelegate {
+    
+    /// Handle result from 3DS form
     func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
         let urlString = request.url?.absoluteString
-        if (urlString == "http://cloudpayments.ru/") {
+        if (urlString == Constants.cloudpaymentsURL) {
             var response: String? = nil
             if let aBody = request.httpBody {
                 response = String(data: aBody, encoding: .ascii)
             }
-            let responseDictionary = parseQueryString(response)
+            let responseDictionary = parse(response: response)
             webView.removeFromSuperview()
             post3ds(transactionId: responseDictionary?["MD"] as! String, paRes: responseDictionary?["PaRes"] as! String)
             return false
         }
         return true
     }
+}
+
+extension CheckoutViewController: UITextFieldDelegate {
     
-    // Пример определения типа платежной системы по номеру карты:
-    // Определяем тип во время ввода номера карты и выводим данные в лог
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        print(Card.cardType(toString: Card.cardType(fromCardNumber: textField.text)))
-        return true
+        switch textField {
+            // Пример определения типа платежной системы по номеру карты:
+        // Определяем тип во время ввода номера карты и выводим данные в лог
+        case textFieldCardNumber:
+            print(Card.cardType(toString: Card.cardType(fromCardNumber: textField.text)))
+            return true
+        case textFieldExpDate:
+            // original answer https://stackoverflow.com/a/47077265
+            if range.length > 0 {
+                return true
+            }
+            if string == "" {
+                return false
+            }
+            if range.location > 4 {
+                return false
+            }
+            var originalText = textField.text
+            let replacementText = string.replacingOccurrences(of: " ", with: "")
+            
+            // Verify entered text is a numeric value
+            if !CharacterSet.decimalDigits.isSuperset(of: CharacterSet(charactersIn: replacementText)) {
+                return false
+            }
+            
+            // Put / after 2 digit
+            if range.location == 2 {
+                originalText?.append("/")
+                textField.text = originalText
+            }
+            return true
+            
+        default:
+            return true
+        }
     }
     
 }
@@ -152,7 +216,7 @@ private extension CheckoutViewController {
                 self?.checkTransactionResponse(transactionResponse: transactionResponse)
             case .failure(let error):
                 print("error")
-                self?.showAlert(title: "Ошибка", message: error.localizedDescription)
+                self?.showAlert(title: .errorWord, message: error.localizedDescription)
             }
         }
     }
@@ -178,7 +242,7 @@ private extension CheckoutViewController {
                 self?.checkTransactionResponse(transactionResponse: transactionResponse)
             case .failure(let error):
                 print("error")
-                self?.showAlert(title: "Ошибка", message: error.localizedDescription)
+                self?.showAlert(title: .errorWord, message: error.localizedDescription)
             }
         }
     }
@@ -188,21 +252,21 @@ private extension CheckoutViewController {
         if (transactionResponse.success) {
             
             // Показываем результат
-            self.showAlert(title: "Информация", message: transactionResponse.transaction?.cardHolderMessage)
+            self.showAlert(title: .informationWord, message: transactionResponse.transaction?.cardHolderMessage)
         } else {
             
             if (!transactionResponse.message.isEmpty) {
-                self.showAlert(title: "Ошибка", message: transactionResponse.message)
+                self.showAlert(title: .errorWord, message: transactionResponse.message)
                 return
             }
             if (transactionResponse.transaction?.paReq != nil && transactionResponse.transaction?.acsUrl != nil) {
-               
+                
                 let transactionId = String(describing: transactionResponse.transaction?.transactionId ?? 0)
                 
                 // Показываем 3DS форму
                 D3DS.make3DSPayment(with: self, andAcsURLString: transactionResponse.transaction?.acsUrl, andPaReqString: transactionResponse.transaction?.paReq, andTransactionIdString: transactionId)
-                            } else {
-                self.showAlert(title: "Информация", message: transactionResponse.transaction?.cardHolderMessage)
+            } else {
+                self.showAlert(title: .informationWord, message: transactionResponse.transaction?.cardHolderMessage)
             }
         }
     }
@@ -221,7 +285,7 @@ private extension CheckoutViewController {
                 self?.checkTransactionResponse(transactionResponse: transactionResponse)
             case .failure(let error):
                 print("error")
-                self?.showAlert(title: "Ошибка", message: error.localizedDescription)
+                self?.showAlert(title: .errorWord, message: error.localizedDescription)
             }
         }
     }
@@ -237,15 +301,18 @@ private extension CheckoutViewController {
     }
     
     // MARK: - Utilities
-    func parseQueryString(_ query: String?) -> [AnyHashable: Any]? {
-        var dict = [AnyHashable: Any](minimumCapacity: 6)
-        let pairs = query?.components(separatedBy: "&")
-        for pair: String? in pairs ?? [String?]() {
-            let elements = pair?.components(separatedBy: "=")
-            let key = elements?[0].removingPercentEncoding
-            let val = elements?[1].removingPercentEncoding
-            dict[key!] = val
+    
+    func parse(response: String?) -> [AnyHashable: Any]? {
+        guard let response = response else {
+            return nil
         }
+        
+        let pairs = response.components(separatedBy: "&")
+        let elements = pairs.map { $0.components(separatedBy: "=") }
+        let dict = elements.reduce(into: [String: String]()) {
+            $0[$1[0].removingPercentEncoding!] = $1[1].removingPercentEncoding
+        }
+        
         return dict
     }
 }
