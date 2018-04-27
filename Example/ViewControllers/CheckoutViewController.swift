@@ -1,7 +1,6 @@
 import UIKit
 import Alamofire
 import AFNetworking
-//import PassKit
 
 enum PayType {
     case charge
