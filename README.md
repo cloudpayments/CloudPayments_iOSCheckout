@@ -5,7 +5,12 @@
 Схемы проведения платежа http://cloudpayments.ru/Docs/Integration#schemes
 
 ## Инсталяция
+
+Скачать архивом или клонировать репозитоний командой:
 git clone https://github.com/cloudpayments/CloudPayments_iOSCheckout.git
+
+За тем в папке проекта выполнить команду:
+pod install 
 
 ## Описание работы приложения с SDK CloudPayments
 
