@@ -1,6 +1,7 @@
 import UIKit
 import Alamofire
 import AFNetworking
+//import PassKit
 
 enum PayType {
     case charge
@@ -30,6 +31,10 @@ final class CheckoutViewController: UIViewController {
     @IBOutlet weak var textFieldExpDate: UITextField!
     @IBOutlet weak var textFieldHolderName: UITextField!
     @IBOutlet weak var textFieldCVV: UITextField!
+    @IBOutlet weak var buttonApplePay: UIButton!
+    
+    let SupportedPaymentNetworks = [PKPaymentNetwork.visa, PKPaymentNetwork.masterCard] // Платежные системы для Apple Pay
+    let ApplePayMerchantID = "merchant.com.YOURDOMAIN" // Ваш ID для Apple Pay!
     
     /// Instantiate `CheckoutViewController` from storyboard
     static func storyboardInstance(payType: PayType) -> CheckoutViewController {
@@ -51,8 +56,11 @@ final class CheckoutViewController: UIViewController {
         self.loadingIndicator.isHidden = true
         title = payType.description
         
+        buttonApplePay.isHidden = !PKPaymentAuthorizationViewController.canMakePayments(usingNetworks: SupportedPaymentNetworks) // Проверяем возможно ли использовать Apple Pay
+        
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    
     }
     
     deinit {
@@ -128,6 +136,52 @@ final class CheckoutViewController: UIViewController {
         }
     }
     
+    @IBAction func onApplePayClick(_ sender: Any) {
+        
+        // Формируем запрос для Apple Pay
+        let request = PKPaymentRequest()
+        request.merchantIdentifier = ApplePayMerchantID
+        request.supportedNetworks = SupportedPaymentNetworks
+        request.merchantCapabilities = PKMerchantCapability.capability3DS // Возможно использование 3DS
+        request.countryCode = "RU" // Код страны
+        request.currencyCode = "RUB" // Код валюты
+        request.paymentSummaryItems = [
+            PKPaymentSummaryItem(label: "Рубль", amount: 1) // Информация о товаре (название и цена)
+        ]
+        let applePayController = PKPaymentAuthorizationViewController(paymentRequest: request)
+        applePayController?.delegate = self
+        self.present(applePayController!, animated: true, completion: nil)
+    }
+}
+
+// Обработка результата для Apple Pay
+// ВНИМАНИЕ! Нельзя тестировать Apple Pay в симуляторе, так как в симуляторе payment.token.paymentData всегда nil
+extension CheckoutViewController: PKPaymentAuthorizationViewControllerDelegate {
+    func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, completion: @escaping ((PKPaymentAuthorizationStatus) -> Void)) {
+        completion(PKPaymentAuthorizationStatus.success)
+        
+        // Конвертируем объект PKPayment в строку криптограммы
+        guard let cryptogram = PKPaymentConverter.convert(toString: payment) else {
+            return
+        }
+        
+        print(cryptogram)
+        
+        // Используя методы API выполняем оплату по криптограмме
+        // (charge (для одностадийного платежа) или auth (для двухстадийного))
+        switch payType {
+        case .charge:
+            charge(cardCryptogramPacket: cryptogram, cardHolderName: "")
+        case .auth:
+            auth(cardCryptogramPacket: cryptogram, cardHolderName: "")
+        default:
+            return
+        }
+    }
+    
+    func paymentAuthorizationViewControllerDidFinish(_ controller: PKPaymentAuthorizationViewController) {
+        controller.dismiss(animated: true, completion: nil)
+    }
 }
 
 extension CheckoutViewController: UIWebViewDelegate {
@@ -188,7 +242,6 @@ extension CheckoutViewController: UITextFieldDelegate {
             return true
         }
     }
-    
 }
 
 // MARK: - Private methods

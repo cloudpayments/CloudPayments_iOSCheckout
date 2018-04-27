@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Owf-M3-z6O">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Owf-M3-z6O">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -79,59 +79,68 @@
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="548"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1 RUB" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5hX-mz-qcg">
-                                                <rect key="frame" x="16" y="16" width="46" height="21"/>
+                                                <rect key="frame" x="16" y="16" width="46" height="20.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Rub" translatesAutoresizingMaskIntoConstraints="NO" id="7yS-ih-qS3">
-                                                <rect key="frame" x="16" y="45" width="122" height="122"/>
+                                                <rect key="frame" x="16" y="44.5" width="122" height="122"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="122" id="7GD-1H-jLQ"/>
                                                     <constraint firstAttribute="height" constant="122" id="WGf-eP-fDo"/>
                                                 </constraints>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ВНИМАНИЕ!  При вводе даных реальной карты с нее будет списан 1 рубль!" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fLk-EQ-EfK">
-                                                <rect key="frame" x="146" y="45" width="158" height="101.5"/>
+                                                <rect key="frame" x="146" y="44.5" width="158" height="101.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Введите данные карты" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LKw-bm-mau">
-                                                <rect key="frame" x="69" y="183" width="183" height="21"/>
+                                                <rect key="frame" x="69.5" y="182.5" width="182.5" height="20.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" red="0.23921568630000001" green="0.5568627451" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Номер" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="WC2-u3-rBB">
-                                                <rect key="frame" x="16" y="212" width="288" height="30"/>
+                                                <rect key="frame" x="16" y="211" width="288" height="30"/>
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits" keyboardType="numberPad" textContentType="cc-number"/>
                                             </textField>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Срок действия в формате: MM/YY" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="bFs-Vm-VSK">
-                                                <rect key="frame" x="16" y="250" width="288" height="30"/>
+                                                <rect key="frame" x="16" y="249" width="288" height="30"/>
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
                                             </textField>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Имя владельца" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="SCx-F3-h14">
-                                                <rect key="frame" x="16" y="288" width="288" height="30"/>
+                                                <rect key="frame" x="16" y="287" width="288" height="30"/>
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits" textContentType="name"/>
                                             </textField>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="CVV код" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="68v-Id-cD7">
-                                                <rect key="frame" x="16" y="326" width="288" height="30"/>
+                                                <rect key="frame" x="16" y="325" width="288" height="30"/>
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits" keyboardType="numberPad" textContentType="postal-code"/>
                                             </textField>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1Ig-iS-h9X">
-                                                <rect key="frame" x="126" y="364" width="68" height="30"/>
+                                                <rect key="frame" x="126" y="363" width="68" height="30"/>
                                                 <state key="normal" title="Оплатить"/>
                                                 <connections>
                                                     <action selector="onPayClick:" destination="KMB-fv-FcQ" eventType="touchUpInside" id="Akb-Y4-D6u"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rNM-fx-Vss">
+                                                <rect key="frame" x="94" y="409" width="132" height="30"/>
+                                                <state key="normal" title="Buy with Apple Pay">
+                                                    <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="onApplePayClick:" destination="KMB-fv-FcQ" eventType="touchUpInside" id="Zr2-ja-IKM"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -150,6 +159,7 @@
                                             <constraint firstItem="SCx-F3-h14" firstAttribute="centerX" secondItem="tLb-Ap-ybU" secondAttribute="centerX" id="XAI-GC-0AU"/>
                                             <constraint firstItem="5hX-mz-qcg" firstAttribute="leading" secondItem="tLb-Ap-ybU" secondAttribute="leading" constant="16" id="YkJ-PH-Uff"/>
                                             <constraint firstItem="LKw-bm-mau" firstAttribute="centerX" secondItem="tLb-Ap-ybU" secondAttribute="centerX" id="ZEr-aN-z3F"/>
+                                            <constraint firstItem="rNM-fx-Vss" firstAttribute="top" secondItem="1Ig-iS-h9X" secondAttribute="bottom" constant="16" id="aHV-CK-3eT"/>
                                             <constraint firstAttribute="trailing" secondItem="fLk-EQ-EfK" secondAttribute="trailing" constant="16" id="cPa-n5-jLm"/>
                                             <constraint firstItem="5hX-mz-qcg" firstAttribute="top" secondItem="tLb-Ap-ybU" secondAttribute="top" constant="16" id="cgT-tU-wjc"/>
                                             <constraint firstItem="fLk-EQ-EfK" firstAttribute="top" secondItem="5hX-mz-qcg" secondAttribute="bottom" constant="8" id="cjU-9k-OJs"/>
@@ -161,6 +171,7 @@
                                             <constraint firstItem="fLk-EQ-EfK" firstAttribute="leading" secondItem="7yS-ih-qS3" secondAttribute="trailing" constant="8" id="o05-qS-02q"/>
                                             <constraint firstItem="bFs-Vm-VSK" firstAttribute="leading" secondItem="tLb-Ap-ybU" secondAttribute="leading" constant="16" id="oDt-6Z-4Z5"/>
                                             <constraint firstItem="LKw-bm-mau" firstAttribute="top" secondItem="7yS-ih-qS3" secondAttribute="bottom" constant="16" id="s6f-ID-E5y"/>
+                                            <constraint firstItem="rNM-fx-Vss" firstAttribute="centerX" secondItem="tLb-Ap-ybU" secondAttribute="centerX" id="vV6-Dn-8yc"/>
                                             <constraint firstItem="WC2-u3-rBB" firstAttribute="leading" secondItem="tLb-Ap-ybU" secondAttribute="leading" constant="16" id="wvB-Oh-CvN"/>
                                             <constraint firstItem="WC2-u3-rBB" firstAttribute="centerX" secondItem="tLb-Ap-ybU" secondAttribute="centerX" id="yXD-9Y-1vD"/>
                                             <constraint firstItem="1Ig-iS-h9X" firstAttribute="top" secondItem="68v-Id-cD7" secondAttribute="bottom" constant="8" id="yvi-yO-4Lc"/>
@@ -194,6 +205,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Second" id="r8r-bO-dV9"/>
                     <connections>
+                        <outlet property="buttonApplePay" destination="rNM-fx-Vss" id="63I-Zm-QOC"/>
                         <outlet property="loadingIndicator" destination="fEW-XP-nGW" id="w3K-uf-gKN"/>
                         <outlet property="scrollView" destination="TZq-mj-dOi" id="vl1-mF-Jsz"/>
                         <outlet property="textFieldCVV" destination="68v-Id-cD7" id="lcA-Vn-Met"/>

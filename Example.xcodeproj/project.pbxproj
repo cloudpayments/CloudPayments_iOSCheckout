@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		134D4DEB2091D28D00674881 /* PKPaymentConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = 134D4DEA2091D28D00674881 /* PKPaymentConverter.m */; };
 		138311AA2074AB4300230914 /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 138311A92074AB4300230914 /* Transaction.swift */; };
 		138311AE2074C4F300230914 /* HTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 138311AD2074C4F300230914 /* HTTP.swift */; };
 		138311B02074C5AA00230914 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 138311AF2074C5AA00230914 /* NetworkService.swift */; };
@@ -30,6 +31,8 @@
 /* Begin PBXFileReference section */
 		06C321ACF3F101756C2E75C2 /* Pods_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		13090C592064E795002C39AA /* Example-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Example-Bridging-Header.h"; sourceTree = "<group>"; };
+		134D4DE92091D19700674881 /* PKPaymentConverter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PKPaymentConverter.h; sourceTree = "<group>"; };
+		134D4DEA2091D28D00674881 /* PKPaymentConverter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PKPaymentConverter.m; sourceTree = "<group>"; };
 		138311A92074AB4300230914 /* Transaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transaction.swift; sourceTree = "<group>"; };
 		138311AD2074C4F300230914 /* HTTP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTP.swift; sourceTree = "<group>"; };
 		138311AF2074C5AA00230914 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
@@ -68,6 +71,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		134D4DE82091D0ED00674881 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				134D4DE92091D19700674881 /* PKPaymentConverter.h */,
+				134D4DEA2091D28D00674881 /* PKPaymentConverter.m */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
 		138311A82074AB0600230914 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -117,6 +129,7 @@
 		1392BEAE2059276000762C24 /* SDK */ = {
 			isa = PBXGroup;
 			children = (
+				134D4DE82091D0ED00674881 /* Utils */,
 				138A2F6A20860B8700DA318D /* Card */,
 				138A2F6920860B6200DA318D /* Support */,
 				13A93C742080D13700918EDE /* 3DS */,
@@ -364,6 +377,7 @@
 				138311AE2074C4F300230914 /* HTTP.swift in Sources */,
 				F4F0ADB12088E7CD00E9D763 /* String+Extensions.swift in Sources */,
 				13FF62B12074C8C400A1C95E /* UIViewController+Extensions.swift in Sources */,
+				134D4DEB2091D28D00674881 /* PKPaymentConverter.m in Sources */,
 				138311AA2074AB4300230914 /* Transaction.swift in Sources */,
 				138311B22074C5E200230914 /* Api.swift in Sources */,
 				13A93C772080D17200918EDE /* D3DS.m in Sources */,
