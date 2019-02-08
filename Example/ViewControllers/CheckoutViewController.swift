@@ -126,9 +126,9 @@ final class CheckoutViewController: UIViewController {
         // Используя методы API выполняем оплату по криптограмме
         // (charge (для одностадийного платежа) или auth (для двухстадийного))
         switch payType {
-        case .charge:
+        case .charge?:
             charge(cardCryptogramPacket: packet, cardHolderName: holderName)
-        case .auth:
+        case .auth?:
             auth(cardCryptogramPacket: packet, cardHolderName: holderName)
         default:
             return
@@ -169,9 +169,9 @@ extension CheckoutViewController: PKPaymentAuthorizationViewControllerDelegate {
         // Используя методы API выполняем оплату по криптограмме
         // (charge (для одностадийного платежа) или auth (для двухстадийного))
         switch payType {
-        case .charge:
+        case .charge?:
             charge(cardCryptogramPacket: cryptogram, cardHolderName: "")
-        case .auth:
+        case .auth?:
             auth(cardCryptogramPacket: cryptogram, cardHolderName: "")
         default:
             return
