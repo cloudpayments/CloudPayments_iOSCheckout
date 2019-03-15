@@ -37,7 +37,7 @@ let card = Card()
 String card.makeCryptogramPacket(cardNumber, andExpDate: expDate, andCVV: cvv, andMerchantPublicID: Constants.merchantPulicId)
 
 ```
-## Подключение Apple Pay для клиентов CloudPayments
+## Подключение Apple Pay через CloudPayments
 
 https://cloudpayments.ru/docs/applepay - о Apple Pay
 
