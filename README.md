@@ -4,12 +4,12 @@
 
 Схемы проведения платежа http://cloudpayments.ru/Docs/Integration#schemes
 
-## Инсталяция
+## Инсталляция
 
 Скачать архивом или клонировать репозитоний командой:
 git clone https://github.com/cloudpayments/CloudPayments_iOSCheckout.git
 
-За тем в папке проекта выполнить команду:
+В папке проекта выполнить команду:
 pod install 
 
 ## Описание работы приложения с SDK CloudPayments
@@ -43,7 +43,7 @@ https://cloudpayments.ru/docs/applepay - о Apple Pay
 
 [https://www.raywenderlich.com/87300/apple-pay-tutorial](https://www.raywenderlich.com/87300/apple-pay-tutorial) \- туториал, по подключению Apple Pay в приложение.
 
-ВАЖНО:
+**ВАЖНО**:
 
 При обработке успешного ответа от Apple Pay, необходимо выполнить переобразование объекта PKPayment в криптограмму для передачи в платежное API CloudPayments
 
@@ -54,8 +54,8 @@ let cryptogram = PKPaymentConverter.convert(toString: payment)
 
 ## Проведение оплаты
 
-В примере merchantPulicId и merchantApiPass это тестовые Public ID и пароль для API, Вам необходимо получить свои данные в личном кабинете на сайте CloudPayments.
-Не храните пароль для API в мобильном приложении это не безопасно, приложение должно выполнять запросы согласно схеме через ваш сервер: https://cloudpayments.ru/Docs/MobileSDK
+В примере `merchantPulicId` и `merchantApiPass` это тестовые Public ID и пароль для API, Вам необходимо получить свои данные в личном кабинете на сайте CloudPayments.
+Не храните пароль для API в мобильном приложении - это не безопасно, приложение должно выполнять запросы согласно схеме через ваш сервер: https://cloudpayments.ru/Docs/MobileSDK
 
 1) В приложении необходимо получить получить объект PKPayment от Apple Pay и преобразовать его в криптограмму, либо  получить карточные данные и создать на их основе криптограмму;
 2) Отправить криптограмму и все данные для платежа с мобильного устройства на ваш сервер; 
